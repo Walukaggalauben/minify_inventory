@@ -1,44 +1,74 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Add Phone</title>
-</head>
-<body>
+<?php
 
-<h2>Add New Phone</h2>
+include 'includes/header.php';
+
+?>
+
+<h1>➕ Add New Phone</h1>
+
+<br>
+
+<div class="card">
 
 <form action="save_phone.php" method="POST">
 
-Brand:<br>
-<input type="text" name="brand"><br><br>
+<p><strong>Brand</strong></p>
+<input type="text" name="brand" required>
 
-Model:<br>
-<input type="text" name="model"><br><br>
+<br><br>
 
-Color:<br>
-<input type="text" name="color"><br><br>
+<p><strong>Model</strong></p>
+<input type="text" name="model" required>
 
-Storage:<br>
-<input type="text" name="storage"><br><br>
+<br><br>
 
-RAM:<br>
-<input type="text" name="ram"><br><br>
+<p><strong>Color</strong></p>
+<input type="text" name="color">
 
-Buying Price:<br>
-<input type="number" name="buying_price"><br><br>
+<br><br>
 
-Selling Price:<br>
-<input type="number" name="selling_price"><br><br>
+<p><strong>Storage</strong></p>
+<input type="text" name="storage">
 
-Quantity:<br>
-<input type="number" name="quantity"><br><br>
+<br><br>
 
-IMEI:<br>
-<input type="text" name="imei"><br><br>
+<p><strong>RAM</strong></p>
+<input type="text" name="ram">
 
-<button type="submit">Save Phone</button>
+<br><br>
+
+<p><strong>Buying Price (UGX)</strong></p>
+<input type="number" name="buying_price" required>
+
+<br><br>
+
+<p><strong>Selling Price (UGX)</strong></p>
+<input type="number" name="selling_price" required>
+
+<br><br>
+
+<p><strong>Quantity</strong></p>
+<input type="number" name="quantity" required>
+
+<br><br>
+
+<p><strong>IMEIs (One Per Line)</strong></p>
+
+<textarea
+name="imeis"
+rows="8"
+placeholder="356789123456789
+356789123456780
+356789123456781"></textarea>
+
+<br><br>
+
+<button type="submit">
+💾 Save Phone
+</button>
 
 </form>
 
-</body>
-</html>
+</div>
+
+<?php include 'includes/footer.php'; ?>

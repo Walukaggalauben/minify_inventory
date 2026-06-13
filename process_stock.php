@@ -1,49 +1,68 @@
 <?php
 
+include 'check_login.php';
+
 include 'db.php';
 
-$brand = $_POST['brand'];
-$model = $_POST['model'];
-$color = $_POST['color'];
-$storage = $_POST['storage'];
-$ram = $_POST['ram'];
-$buying_price = $_POST['buying_price'];
-$selling_price = $_POST['selling_price'];
-$quantity = $_POST['quantity'];
+$phone_id = $_POST['phone_id'];
 
-$sql = "
+$quantity_received = $_POST['quantity_received'];
 
-INSERT INTO phones
+$phone = mysqli_fetch_assoc(
+
+mysqli_query(
+
+$conn,
+
+"SELECT *
+
+FROM phones
+
+WHERE id='$phone_id'"
+
+)
+
+);
+
+$new_quantity =
+
+$phone['quantity']
+
++
+
+$quantity_received;
+
+mysqli_query(
+
+$conn,
+
+"UPDATE phones
+
+SET quantity='$new_quantity'
+
+WHERE id='$phone_id'"
+
+);
+
+mysqli_query(
+
+$conn,
+
+"INSERT INTO stock_receiving
 
 (
-brand,
-model,
-color,
-storage,
-ram,
-buying_price,
-selling_price,
-quantity
+phone_id,
+quantity_received
 )
 
 VALUES
 
 (
-'$brand',
-'$model',
-'$color',
-'$storage',
-'$ram',
-'$buying_price',
-'$selling_price',
-'$quantity'
-)
+'$phone_id',
+'$quantity_received'
+)"
 
-";
-
-mysqli_query($conn,$sql);
-
-$phone_id = mysqli_insert_id($conn);
+);
 
 $imeis = trim($_POST['imeis']);
 
@@ -85,7 +104,7 @@ if(!empty($imeis)){
 
 }
 
-header("Location:view_phones.php");
+header("Location: stock_history.php");
 
 exit();
 

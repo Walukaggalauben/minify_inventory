@@ -3,6 +3,8 @@
 include 'db.php';
 
 $phone_id = $_POST['phone_id'];
+$customer_id = $_POST['customer_id'];
+$imei_id = $_POST['imei_id'];
 $quantity = $_POST['quantity'];
 
 $phone = mysqli_fetch_assoc(
@@ -10,7 +12,7 @@ $phone = mysqli_fetch_assoc(
 mysqli_query(
 $conn,
 "SELECT * FROM phones
-WHERE id=$phone_id"
+WHERE id='$phone_id'"
 )
 
 );
@@ -40,16 +42,22 @@ mysqli_query(
 
 $conn,
 
-INSERT INTO sales
-(phone_id,quantity,total,profit)
+"INSERT INTO sales
+(customer_id,phone_id,quantity,total,profit)
 
 VALUES
 (
+'$customer_id',
 '$phone_id',
 '$quantity',
 '$total',
 '$profit'
-)
+)"
+
+);
+
+$sale_id = mysqli_insert_id($conn);
+
 mysqli_query(
 
 $conn,
@@ -62,6 +70,23 @@ WHERE id='$phone_id'"
 
 );
 
-header("Location:view_phones.php");
+mysqli_query(
+
+$conn,
+
+"UPDATE phone_imei
+
+SET
+status='Sold',
+customer_id='$customer_id',
+sale_id='$sale_id'
+
+WHERE id='$imei_id'"
+
+);
+
+header("Location:sales_history.php");
+
+exit();
 
 ?>

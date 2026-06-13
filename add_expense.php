@@ -6,35 +6,36 @@ include 'includes/header.php';
 
 ?>
 
-<h1>👤 Add Customer</h1>
+<h1>💸 Add Expense</h1>
 
 <br>
 
 <div class="card">
 
-<form action="save_customer.php" method="POST">
+<form action="save_expense.php" method="POST">
 
-<p><strong>Customer Name</strong></p>
+<p><strong>Expense Name</strong></p>
 
 <input
 type="text"
-name="customer_name"
+name="expense_name"
+placeholder="Rent, Electricity, Internet..."
 required>
 
 <br><br>
 
-<p><strong>Phone Number</strong></p>
+<p><strong>Amount (UGX)</strong></p>
 
 <input
-type="text"
-name="phone"
+type="number"
+name="amount"
 required>
 
 <br><br>
 
 <button type="submit">
 
-💾 Save Customer
+💾 Save Expense
 
 </button>
 

@@ -1,6 +1,9 @@
 <?php
 
+include 'check_login.php';
 include 'db.php';
+
+$id = $_POST['id'];
 
 $customer_name = mysqli_real_escape_string(
 $conn,
@@ -16,17 +19,14 @@ mysqli_query(
 
 $conn,
 
-"INSERT INTO customers
-(
-customer_name,
-phone
-)
+"UPDATE customers
 
-VALUES
-(
-'$customer_name',
-'$phone'
-)"
+SET
+
+customer_name='$customer_name',
+phone='$phone'
+
+WHERE id='$id'"
 
 );
 
