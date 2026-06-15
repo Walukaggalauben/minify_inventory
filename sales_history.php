@@ -7,6 +7,7 @@ $result = mysqli_query(
 $conn,
 
 "SELECT
+
 sales.*,
 phones.brand,
 phones.model,
@@ -42,6 +43,7 @@ include 'includes/header.php';
 <th>Customer</th>
 <th>Phone</th>
 <th>Qty</th>
+<th>Sale Price</th>
 <th>Total</th>
 <th>Profit</th>
 <th>Date</th>
@@ -58,22 +60,40 @@ include 'includes/header.php';
 <td><?php echo $row['customer_name']; ?></td>
 
 <td>
+
 <?php echo $row['brand']; ?>
+
 <?php echo " "; ?>
+
 <?php echo $row['model']; ?>
+
 </td>
 
 <td><?php echo $row['quantity']; ?></td>
 
 <td>
-UGX <?php echo number_format($row['total']); ?>
+
+UGX <?php echo number_format($row['sale_price']); ?>
+
 </td>
 
 <td>
-UGX <?php echo number_format($row['profit']); ?>
+
+UGX <?php echo number_format($row['total']); ?>
+
 </td>
 
-<td><?php echo $row['sale_date']; ?></td>
+<td>
+
+UGX <?php echo number_format($row['profit']); ?>
+
+</td>
+
+<td>
+
+<?php echo $row['sale_date']; ?>
+
+</td>
 
 <td>
 

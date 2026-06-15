@@ -4,12 +4,12 @@ include 'db.php';
 
 $phones = mysqli_query(
 $conn,
-"SELECT * FROM phones"
+"SELECT * FROM phones ORDER BY brand, model"
 );
 
 $customers = mysqli_query(
 $conn,
-"SELECT * FROM customers"
+"SELECT * FROM customers ORDER BY customer_name"
 );
 
 include 'includes/header.php';
@@ -27,6 +27,10 @@ include 'includes/header.php';
 <p><strong>Customer</strong></p>
 
 <select name="customer_id" required>
+
+<option value="">
+Select Customer
+</option>
 
 <?php
 
@@ -60,21 +64,43 @@ Select Phone
 
 <?php
 
+mysqli_data_seek($phones,0);
+
 while($phone=mysqli_fetch_assoc($phones)){
 
 ?>
 
-<option value="<?php echo $phone['id']; ?>">
+<option
+value="<?php echo $phone['id']; ?>"
+data-price="<?php echo $phone['selling_price']; ?>">
 
 <?php echo $phone['brand']; ?>
+
 <?php echo " "; ?>
+
 <?php echo $phone['model']; ?>
+
+(UGX <?php echo number_format($phone['selling_price']); ?>)
 
 </option>
 
 <?php } ?>
 
 </select>
+
+<br><br>
+
+<p><strong>Actual Sale Price (UGX)</strong></p>
+
+<input
+type="number"
+name="actual_price"
+id="actual_price"
+required>
+
+<small>
+You may sell above or below the system price.
+</small>
 
 <br><br>
 
@@ -93,16 +119,10 @@ Select Phone First
 
 <br><br>
 
-<p><strong>Quantity</strong></p>
-
 <input
-type="number"
+type="hidden"
 name="quantity"
-value="1"
-min="1"
-required>
-
-<br><br>
+value="1">
 
 <button type="submit">
 
@@ -122,6 +142,23 @@ function loadIMEIs(){
     document.getElementById(
     "phone_id"
     ).value;
+
+    var selectedOption =
+    document.getElementById(
+    "phone_id"
+    ).selectedOptions[0];
+
+    if(selectedOption)
+    {
+        var price =
+        selectedOption.getAttribute(
+        "data-price"
+        );
+
+        document.getElementById(
+        "actual_price"
+        ).value = price;
+    }
 
     var xhr =
     new XMLHttpRequest();

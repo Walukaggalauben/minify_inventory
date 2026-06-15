@@ -2,30 +2,119 @@
 
 include 'db.php';
 
-$phone_id = $_POST['phone_id'];
-$customer_id = $_POST['customer_id'];
-$imei_id = $_POST['imei_id'];
-$quantity = $_POST['quantity'];
+/*
+|--------------------------------------------------------------------------
+| GET FORM DATA
+|--------------------------------------------------------------------------
+*/
 
-$phone = mysqli_fetch_assoc(
-
-mysqli_query(
+$phone_id = mysqli_real_escape_string(
 $conn,
-"SELECT * FROM phones
+$_POST['phone_id']
+);
+
+$customer_id = mysqli_real_escape_string(
+$conn,
+$_POST['customer_id']
+);
+
+$imei_id = mysqli_real_escape_string(
+$conn,
+$_POST['imei_id']
+);
+
+$actual_price = mysqli_real_escape_string(
+$conn,
+$_POST['actual_price']
+);
+
+$quantity = 1;
+
+/*
+|--------------------------------------------------------------------------
+| GET PHONE DETAILS
+|--------------------------------------------------------------------------
+*/
+
+$phone_result = mysqli_query(
+
+$conn,
+
+"SELECT *
+
+FROM phones
+
 WHERE id='$phone_id'"
-)
 
 );
 
+$phone = mysqli_fetch_assoc(
+$phone_result
+);
+
+if(!$phone){
+
+    die("Phone not found.");
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| CHECK STOCK
+|--------------------------------------------------------------------------
+*/
+
+if($phone['quantity'] < 1){
+
+    die("This phone is out of stock.");
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| CHECK IMEI EXISTS
+|--------------------------------------------------------------------------
+*/
+
+$imei_result = mysqli_query(
+
+$conn,
+
+"SELECT *
+
+FROM phone_imei
+
+WHERE id='$imei_id'
+
+AND status='In Stock'"
+
+);
+
+if(mysqli_num_rows($imei_result) == 0){
+
+    die("Selected IMEI is not available.");
+
+}
+
+$imei_data = mysqli_fetch_assoc(
+$imei_result
+);
+
+/*
+|--------------------------------------------------------------------------
+| CALCULATIONS
+|--------------------------------------------------------------------------
+*/
+
 $total =
-$phone['selling_price']
+$actual_price
 *
 $quantity;
 
 $profit =
 
 (
-$phone['selling_price']
+$actual_price
 -
 $phone['buying_price']
 )
@@ -38,25 +127,65 @@ $phone['quantity']
 -
 $quantity;
 
-mysqli_query(
+/*
+|--------------------------------------------------------------------------
+| SAVE SALE
+|--------------------------------------------------------------------------
+*/
+
+$sale = mysqli_query(
 
 $conn,
 
 "INSERT INTO sales
-(customer_id,phone_id,quantity,total,profit)
+
+(
+customer_id,
+phone_id,
+quantity,
+sale_price,
+total,
+profit
+)
 
 VALUES
+
 (
 '$customer_id',
 '$phone_id',
 '$quantity',
+'$actual_price',
 '$total',
 '$profit'
 )"
 
 );
 
-$sale_id = mysqli_insert_id($conn);
+if(!$sale){
+
+    die(
+    "Sale Error: "
+    .
+    mysqli_error($conn)
+    );
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| GET SALE ID
+|--------------------------------------------------------------------------
+*/
+
+$sale_id = mysqli_insert_id(
+$conn
+);
+
+/*
+|--------------------------------------------------------------------------
+| UPDATE PHONE STOCK
+|--------------------------------------------------------------------------
+*/
 
 mysqli_query(
 
@@ -70,6 +199,12 @@ WHERE id='$phone_id'"
 
 );
 
+/*
+|--------------------------------------------------------------------------
+| MARK IMEI AS SOLD
+|--------------------------------------------------------------------------
+*/
+
 mysqli_query(
 
 $conn,
@@ -77,15 +212,32 @@ $conn,
 "UPDATE phone_imei
 
 SET
+
 status='Sold',
+
 customer_id='$customer_id',
+
 sale_id='$sale_id'
 
 WHERE id='$imei_id'"
 
 );
 
-header("Location:sales_history.php");
+/*
+|--------------------------------------------------------------------------
+| REDIRECT TO RECEIPT
+|--------------------------------------------------------------------------
+*/
+
+header(
+
+"Location: receipt.php?id="
+
+.
+
+$sale_id
+
+);
 
 exit();
 

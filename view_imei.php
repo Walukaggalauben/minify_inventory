@@ -1,5 +1,6 @@
 <?php
 
+include 'check_login.php';
 include 'db.php';
 
 $search = "";
@@ -64,6 +65,18 @@ include 'includes/header.php';
 
 <br>
 
+<a href="add_imei.php">
+
+<button>
+
+➕ Add IMEI
+
+</button>
+
+</a>
+
+<br><br>
+
 <div class="card">
 
 <form method="GET">
@@ -94,11 +107,11 @@ value="<?php echo $search; ?>">
 
 <tr>
 
-    <th>ID</th>
-    <th>Brand</th>
-    <th>Model</th>
-    <th>IMEI</th>
-    <th>Status</th>
+<th>ID</th>
+<th>Brand</th>
+<th>Model</th>
+<th>IMEI</th>
+<th>Status</th>
 
 </tr>
 
@@ -106,31 +119,31 @@ value="<?php echo $search; ?>">
 
 <tr>
 
-    <td><?php echo $row['id']; ?></td>
+<td><?php echo $row['id']; ?></td>
 
-    <td><?php echo $row['brand']; ?></td>
+<td><?php echo $row['brand']; ?></td>
 
-    <td><?php echo $row['model']; ?></td>
+<td><?php echo $row['model']; ?></td>
 
-    <td><?php echo $row['imei']; ?></td>
+<td><?php echo $row['imei']; ?></td>
 
-    <td>
+<td>
 
-        <?php
+<?php
 
-        if($row['status'] == 'Sold'){
+if($row['status'] == 'Sold'){
 
-            echo "<span style='color:red;font-weight:bold;'>Sold</span>";
+echo "<span style='color:red;font-weight:bold;'>🔴 Sold</span>";
 
-        }else{
+}else{
 
-            echo "<span style='color:green;font-weight:bold;'>In Stock</span>";
+echo "<span style='color:green;font-weight:bold;'>🟢 In Stock</span>";
 
-        }
+}
 
-        ?>
+?>
 
-    </td>
+</td>
 
 </tr>
 

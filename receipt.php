@@ -14,7 +14,8 @@ phones.brand,
 phones.model,
 phones.selling_price,
 customers.customer_name,
-customers.phone
+customers.phone,
+phone_imei.imei
 
 FROM sales
 
@@ -23,6 +24,9 @@ ON sales.phone_id = phones.id
 
 JOIN customers
 ON sales.customer_id = customers.id
+
+LEFT JOIN phone_imei
+ON phone_imei.sale_id = sales.id
 
 WHERE sales.id = '$sale_id'"
 
@@ -178,6 +182,11 @@ Location: Pioneer Mall PA41
 <?php echo $row['phone']; ?>
 </p>
 
+<p>
+<b>IMEI:</b>
+<?php echo $row['imei']; ?>
+</p>
+
 </div>
 
 <table>
@@ -207,7 +216,7 @@ Location: Pioneer Mall PA41
 </td>
 
 <td>
-UGX <?php echo number_format($row['selling_price']); ?>
+UGX <?php echo number_format($row['sale_price']); ?>
 </td>
 
 <td>
